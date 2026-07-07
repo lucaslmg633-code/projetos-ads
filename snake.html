@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo Snake - Mobile Responsive</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        #menu, #game-container {
+            margin: 20px auto;
+            max-width: 400px;
+        }
+        canvas {
+            background-color: #111;
+            border: 2px solid #fff;
+            display: block;
+            margin: 0 auto;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            max-width: 150px;
+            margin: 15px auto;
+        }
+        .control-btn {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="menu">
+        <h1>Jogo da Cobrinha</h1>
+        <p>Apresentação Acadêmica: Vibe Coding & IA</p>
+        <button class="btn" onclick="startGame()">Jogar</button>
+    </div>
+
+    <div id="game-container" style="display:none;">
+        <canvas id="stage" width="400" height="400"></canvas>
+        
+        <div class="controls">
+            <div></div>
+            <button class="control-btn" onclick="changeDirection('up')">▲</button>
+            <div></div>
+            <button class="control-btn" onclick="changeDirection('left')">◀</button>
+            <div></div>
+            <button class="control-btn" onclick="changeDirection('right')">▶</button>
+            <div></div>
+            <button class="control-btn" onclick="changeDirection('down')">▼</button>
+            <div></div>
+        </div>
+    </div>
+
+    <script>
+        let canvas, ctx;
+        let snake = [{x: 160, y: 160}];
+        let dx = 20, dy = 0;
+        let foodX, foodY;
+        let score = 0;
+
+        function startGame() {
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            canvas = document.getElementById('stage');
+            ctx = canvas.getContext('2d');
+            createFood();
+            setInterval(main, 150);
+        }
+
+        function main() {
+            if (hasGameEnded()) return alert("Fim de Jogo! Pontuação: " + score);
+            clearCanvas();
+            drawFood();
+            moveSnake();
+            drawSnake();
+        }
+
+        function clearCanvas() {
+            ctx.fillStyle = "#111";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawSnake() {
+            ctx.fillStyle = '#4CAF50';
+            snake.forEach(part => ctx.fillRect(part.x, part.y, 18, 18));
+        }
+
+        function moveSnake() {
+            const head = {x: snake
